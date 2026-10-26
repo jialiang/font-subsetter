@@ -125,6 +125,7 @@ export const subsetFonts = async ({
           `--flavor=${format}`,
           "--with-zopfli",
           "--harfbuzz-repacker",
+          "--drop-tables+=vhea,vmtx,BASE,STAT",
         ],
         `${outputName}.${format}`,
       ),

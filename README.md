@@ -85,5 +85,8 @@ named by `fileName` with the family's `source` as `name`
 8. A character the source font doesn't have fails the build.
 9. Source fonts must be `.ttf` files.
 10. `@font-face` rules with a weight range (variable fonts) are ignored.
+11. Vertical text isn't supported: the vertical metrics tables (`vhea`,
+    `vmtx`) are dropped, along with `BASE` (cross-script baselines) and `STAT`
+    (variable-font style names).
 
 [matching]: https://drafts.csswg.org/css-fonts/#font-style-matching
