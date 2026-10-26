@@ -1,0 +1,28 @@
+{
+  "name": "font-subsetter",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Subsets web fonts to the characters a page renders in each face, using pyftsubset",
+  "exports": "./index.js",
+  "files": [
+    "index.js",
+    "cascade.js"
+  ],
+  "scripts": {
+    "lint": "npx eslint . && npx prettier . --write"
+  },
+  "dependencies": {
+    "@csstools/selector-specificity": "^6.0.1",
+    "css-select": "^7.0.0",
+    "htmlparser2": "^12.0.0",
+    "postcss": "^8.5.31",
+    "postcss-selector-parser": "^7.1.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10"
+  }
+}
