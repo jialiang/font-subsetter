@@ -88,5 +88,7 @@ named by `fileName` with the family's `source` as `name`
 11. Vertical text isn't supported: the vertical metrics tables (`vhea`,
     `vmtx`) are dropped, along with `BASE` (cross-script baselines) and `STAT`
     (variable-font style names).
+12. Hinting is always removed. It only sharpens small text on Windows at
+    standard resolution, too little to be worth its size.
 
 [matching]: https://drafts.csswg.org/css-fonts/#font-style-matching
