@@ -65,11 +65,24 @@ const matchFace = (font, { families, declaredFaces, fileName, sourceFiles }) => 
 const isDrawn = (character) =>
   character >= " " && !/\p{Default_Ignorable_Code_Point}/u.test(character);
 
-const runPyftsubset = (pyftsubset, args, label) =>
-  new Promise((resolve, reject) => {
-    const childProcess = spawn(pyftsubset, args, { stdio: "inherit" });
+const uvxArguments = [
+  ["--from", "fonttools==4.67.0"],
+  ["--with", "brotli==1.2.1"],
+  ["--with", "zopfli==0.4.3"],
+  ["--with", "uharfbuzz==0.57.0"],
+  ["pyftsubset"],
+].flat();
 
-    childProcess.on("error", reject);
+const runPyftsubset = (command, args, label) =>
+  new Promise((resolve, reject) => {
+    const childProcess = spawn(command[0], [...command.slice(1), ...args], { stdio: "inherit" });
+
+    childProcess.on("error", (error) => {
+      if (error.code !== "ENOENT") return reject(error);
+
+      const hint = command[0] === "uvx" ? ": install uv or pass the pyftsubset option" : "";
+      reject(new Error(`${command[0]} not found${hint}`));
+    });
 
     childProcess.on("exit", (code) => {
       if (code === 0) resolve();
@@ -85,9 +98,11 @@ export const subsetFonts = async ({
   extraCharacters = {},
   sourceDirectory,
   outputDirectory,
-  pyftsubset = "pyftsubset",
+  pyftsubset,
   formats = ["woff2", "woff"],
 }) => {
+  const command = pyftsubset ? [pyftsubset] : ["uvx", ...uvxArguments];
+
   const families = Object.fromEntries(
     Object.entries(familyOptions).map(([family, option]) => [
       family,
@@ -120,7 +135,7 @@ export const subsetFonts = async ({
 
     return formats.map((format) =>
       runPyftsubset(
-        pyftsubset,
+        command,
         [
           path.join(sourceDirectory, sourceFile),
           `--text=${textToSubset}`,

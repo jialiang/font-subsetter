@@ -8,13 +8,11 @@ every piece of text gets, then runs `pyftsubset` once per face and format.
 
 ## Requirements
 
-[fontTools](https://github.com/fonttools/fonttools) with Brotli, Zopfli and
-uharfbuzz, which this package doesn't install:
+1. Python
+2. [uv](https://docs.astral.sh/uv/) on the `PATH`
 
-```sh
-python -m venv .venv
-.venv/Scripts/pip install fonttools brotli zopfli uharfbuzz
-```
+If deploying through GitHub Actions, add
+[`astral-sh/setup-uv`](https://github.com/astral-sh/setup-uv) before the build.
 
 ## Usage
 
@@ -31,7 +29,6 @@ await subsetFonts({
   extraCharacters: { "noto-sans-jp-regular": "0123456789" },
   sourceDirectory: "./src/fonts/originals",
   outputDirectory: "./dist/fonts",
-  pyftsubset: "./.venv/Scripts/pyftsubset.exe",
 });
 ```
 
@@ -46,7 +43,7 @@ It resolves with the file base name of every face it wrote.
 | `extraCharacters` | `{}`                   | Characters to add per output face, for text that scripts write at runtime.                                                             |
 | `sourceDirectory` |                        | Where the original `.ttf` files are.                                                                                                   |
 | `outputDirectory` |                        | Where the subsets are written. Created if missing.                                                                                     |
-| `pyftsubset`      | `pyftsubset`           | Path to the `pyftsubset` executable.                                                                                                   |
+| `pyftsubset`      | run through `uvx`      | Path to your own `pyftsubset` executable, to use instead of uv.                                                                        |
 | `formats`         | `["woff2", "woff"]`    | Output formats.                                                                                                                        |
 
 ## How faces are matched
