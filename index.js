@@ -60,6 +60,11 @@ const matchFace = (font, { families, declaredFaces, fileName, sourceFiles }) => 
   return { sourceFile, outputName: fileName({ name, ...face }) };
 };
 
+// Control characters and invisible formatting characters (such as soft hyphens
+// and zero-width joiners) have no glyph, so pyftsubset would report them missing.
+const isDrawn = (character) =>
+  character >= " " && !/\p{Default_Ignorable_Code_Point}/u.test(character);
+
 const runPyftsubset = (pyftsubset, args, label) =>
   new Promise((resolve, reject) => {
     const childProcess = spawn(pyftsubset, args, { stdio: "inherit" });
@@ -110,9 +115,8 @@ export const subsetFonts = async ({
   await fs.mkdir(outputDirectory, { recursive: true });
 
   const tasks = [...faces].flatMap(([outputName, { sourceFile, text }]) => {
-    // Control characters have no glyph, so pyftsubset would report them missing.
     const characters = new Set(Array.from(text + (extraCharacters[outputName] ?? "")));
-    const textToSubset = [...characters].filter((character) => character >= " ").join("");
+    const textToSubset = [...characters].filter(isDrawn).join("");
 
     return formats.map((format) =>
       runPyftsubset(

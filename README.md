@@ -81,8 +81,11 @@ named by `fileName` with the family's `source` as `name`
    skipped and text from `content` isn't collected.
 7. Characters the tool can't see have to be listed in `extraCharacters`:
    those that `text-transform` or `font-variant` produce (such as the capitals
-   of `uppercase` text) and text that scripts add at runtime.
-8. A character the source font doesn't have fails the build.
+   of `uppercase` text), text that scripts add at runtime and the hyphen
+   (`‐` or `-`) a browser draws where a soft hyphen breaks a line.
+8. A character the source font doesn't have fails the build. Invisible
+   formatting characters (soft hyphens, zero-width joiners, variation
+   selectors) are left out instead, since they never take a glyph.
 9. Source fonts must be `.ttf` files.
 10. `@font-face` rules with a weight range (variable fonts) are ignored.
 11. Vertical text isn't supported: the vertical metrics tables (`vhea`,
